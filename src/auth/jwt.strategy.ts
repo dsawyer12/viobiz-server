@@ -1,14 +1,8 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { jwtConstants } from './constants';
-
-/*
-secretOrKey: we are using the expedient option of supplying a symmetric secret for signing the token.
-Other options, such as a PEM-encoded public key, may be more appropriate for production apps (see here for more information).
-In any case, as cautioned earlier, do not expose this secret publicly.
- */
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 /*
 It's also worth pointing out that this approach leaves us room ('hooks' as it were) to inject other business logic into the process.
 For example, we could do a database lookup in our validate() method to extract more information about the user,
@@ -23,12 +17,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret,
+      ignoreExpiration: true,
+      secretOrKey: process.env.JWT_SECRET,
     });
   }
 
   async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username };
+    return { userId: payload.sub, email: payload.email };
   }
 }
