@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/user.model';
 
 /*
  Of course in a real application, you wouldn't store a password in plain text.
@@ -16,18 +17,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    console.log('authService validateUser()');
-    const user = await this.userService.findOne(email);
-    if (user && user.pswd === pass) {
-      const { pswd, ...result } = user;
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.userService.findByEmail(email);
+    if (user && user.password === password) {
+      const { password, ...result } = user;
       return result;
     }
     return null;
   }
 
-  async login(user: any) {
-    console.log('authService login()');
+  async login(user: User) {
     const payload = { email: user.email, sub: user._id };
     return {
       access_token: this.jwtService.sign(payload),

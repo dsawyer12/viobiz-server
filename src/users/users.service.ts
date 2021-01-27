@@ -1,31 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { InjectConnection } from '@nestjs/mongoose';
-import { User, UserDocument } from './user.schema';
-import { Connection, Model } from 'mongoose';
+import { Model } from 'mongoose';
+
+import { User, UserDocument } from './user.model';
+import { CreateUserInput } from './user.inputs';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-    @InjectConnection() private connection: Connection,
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async findOne(email: string): Promise<User | undefined> {
-    console.log('userService findOne()');
-    this.userModel.findOne({ email: email }, function (err, docs) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('Result : ', docs);
-      }
-    });
-    // const user = await this.userModel.collection('users').findOne({ email: args.email });
-    // return this.users.find((user) => user.email === email);
-    return null;
+  create(payload: CreateUserInput) {
+    const newUser = new this.userModel(payload);
+    return newUser.save();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.userModel.findOne({ email: email });
   }
 }

@@ -5,13 +5,13 @@ type User {
     f_name: String
     l_name: String
     email: String!
-    pswd: String
+    password: String
     createdAt: gqlDate
     updatedAt: gqlDate
 }
 
 type Query {
-    me: User
+    user(email: String!): User
 }
 
 type Mutation {

@@ -1,0 +1,31 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Mutation {
+  createUser(payload: CreateUserInput!): User!
+}
+
+type Query {
+  user(email: String!): User!
+}
+
+type User {
+  _id: ID!
+  createdAt: Date!
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+  updateAt: Date!
+}

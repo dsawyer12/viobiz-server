@@ -11,13 +11,13 @@ export class User {
     f_name?: string;
     l_name?: string;
     email: string;
-    pswd?: string;
+    password?: string;
     createdAt?: gqlDate;
     updatedAt?: gqlDate;
 }
 
 export abstract class IQuery {
-    abstract me(): User | Promise<User>;
+    abstract user(email: string): User | Promise<User>;
 }
 
 export abstract class IMutation {
